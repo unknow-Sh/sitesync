@@ -92,6 +92,10 @@ function AddDocumentDialog({ open, onClose }) {
 
 export default function DocumentVault() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useDocumentStore.getState().fetchDocuments(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { documents } = useDocumentStore();
   const [addOpen, setAddOpen] = useState(false);

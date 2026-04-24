@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Drawer, AppBar, Toolbar, Typography, IconButton,
   List, ListItem, ListItemButton, ListItemIcon, ListItemText,
@@ -7,11 +7,13 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
-  Menu as MenuIcon, People, Inventory2,
-  AccountTree, AccountBalance, Warning, Groups,
-  FolderOpen, Assessment, Notifications, Settings,
-  Analytics, Construction, Circle,
-  Dashboard,
+  Menu as MenuIcon, PeopleTwoTone as People, InventoryTwoTone as Inventory2,
+  AccountTreeTwoTone as AccountTree, AccountBalanceTwoTone as AccountBalance, 
+  WarningTwoTone as Warning, GroupsTwoTone as Groups,
+  FolderOpenTwoTone as FolderOpen, AssessmentTwoTone as Assessment, 
+  NotificationsTwoTone as Notifications, SettingsTwoTone as Settings,
+  AnalyticsTwoTone as Analytics, ConstructionTwoTone as Construction, Circle,
+  DashboardTwoTone as Dashboard,
 } from '@mui/icons-material';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -101,19 +103,18 @@ function SidebarContent({ projectId, onClose }) {
       {/* Logo */}
       <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
         <Box sx={{
-          width: 36, height: 36, borderRadius: 2,
-          background: `linear-gradient(135deg, ${BRAND.amber}, ${BRAND.amberDark})`,
+          width: 38, height: 38, borderRadius: 2,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0,
         }}>
-          <Construction sx={{ color: '#000', fontSize: 20 }} />
+          <img src="/logo.png" alt="Sitesco Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         </Box>
         <Box>
-          <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: BRAND.textPrimary, lineHeight: 1.2 }}>
-            SiteSync
+          <Typography sx={{ fontWeight: 800, fontSize: '1.2rem', color: '#ffffff', lineHeight: 1.2 }}>
+            Sitesco
           </Typography>
-          <Typography sx={{ fontSize: '0.65rem', color: BRAND.amber, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Construction Intelligence
+          <Typography sx={{ fontSize: '0.62rem', color: alpha('#fff', 0.6), fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            Construction SaaS
           </Typography>
         </Box>
       </Box>
@@ -176,7 +177,7 @@ function SidebarContent({ projectId, onClose }) {
                   >
                     <ListItemIcon sx={{
                       minWidth: 32,
-                      color: active ? BRAND.amber : BRAND.textMuted,
+                      color: active ? '#ffffff' : alpha('#fff', 0.6),
                     }}>
                       {item.icon}
                     </ListItemIcon>
@@ -185,7 +186,7 @@ function SidebarContent({ projectId, onClose }) {
                       primaryTypographyProps={{
                         fontSize: '0.85rem',
                         fontWeight: active ? 700 : 500,
-                        color: active ? BRAND.textPrimary : BRAND.textSecondary,
+                        color: active ? '#ffffff' : alpha('#fff', 0.7),
                       }}
                     />
                     <ModuleBadge module={item.module} badge={item.badge} />
@@ -208,15 +209,15 @@ function SidebarContent({ projectId, onClose }) {
           {user?.avatar}
         </Avatar>
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', color: BRAND.textPrimary }} noWrap>
+          <Typography sx={{ fontWeight: 600, fontSize: '0.82rem', color: '#ffffff' }} noWrap>
             {user?.name}
           </Typography>
-          <Typography sx={{ fontSize: '0.7rem', color: BRAND.textMuted, textTransform: 'capitalize' }} noWrap>
+          <Typography sx={{ fontSize: '0.7rem', color: alpha('#fff', 0.6), textTransform: 'capitalize' }} noWrap>
             {user?.role} · {user?.company}
           </Typography>
         </Box>
         <Tooltip title="Settings">
-          <IconButton size="small" sx={{ color: BRAND.textMuted }}>
+          <IconButton size="small" sx={{ color: alpha('#fff', 0.6) }}>
             <Settings fontSize="small" />
           </IconButton>
         </Tooltip>
@@ -232,7 +233,8 @@ export default function DashboardLayout({ children }) {
   const { projectId } = useParams();
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const { activeProject } = useProjectStore();
+  const { activeProject} = useProjectStore();
+  useEffect(() => { useProjectStore.getState().fetchProjects(); }, []);
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', bgcolor: BRAND.navy, overflow: 'hidden' }}>

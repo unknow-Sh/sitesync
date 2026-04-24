@@ -159,6 +159,10 @@ function LogUpdateDialog({ open, onClose, projectId }) {
 
 export default function LiveDashboard() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useUpdatesStore.getState().fetchUpdates(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { updates } = useUpdatesStore();
   const [logOpen, setLogOpen] = useState(false);

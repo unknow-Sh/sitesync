@@ -142,6 +142,10 @@ function MilestoneCard({ milestone }) {
 
 export default function Milestones() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useMilestoneStore.getState().fetchMilestones(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { milestones } = useMilestoneStore();
   const [view, setView] = useState('gantt');

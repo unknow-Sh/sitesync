@@ -1,19 +1,21 @@
 import React, { useRef, useEffect } from 'react';
-import { Box, Typography, Button, Grid, Chip, alpha } from '@mui/material';
+import { Box, Typography, Button, Grid, Chip, alpha, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowForward, Construction, CheckCircle, TrendingUp, Security } from '@mui/icons-material';
+import {
+  ArrowForward, CheckCircle, Speed, Lock, DataUsage,
+  Engineering, TrendingDown, People, RequestQuote
+} from '@mui/icons-material';
 import { BRAND } from '../theme/theme';
-import ThreeGlobe from '../components/ThreeGlobe';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const STATS = [
-  { value: '9M+', label: 'Active projects in India' },
-  { value: '₹15K', label: 'One-time licence (vs ₹8L/yr)' },
-  { value: '10', label: 'Modules, one platform' },
-  { value: '<1s', label: 'Real-time update latency' },
+  { value: '1,400+', label: 'Active Contractors' },
+  { value: '₹5Cr+', label: 'Projects Managed' },
+  { value: '<1s', label: 'WebSocket Latency' },
+  { value: '10', label: 'Integrated Modules' },
 ];
 
 const MODULES = [
@@ -33,314 +35,291 @@ export default function Landing() {
   const navigate = useNavigate();
   const heroRef = useRef();
   const statsRef = useRef();
-  const modulesRef = useRef();
+  const vsRef = useRef();
+  const deepDiveRef = useRef();
+  const gridRef = useRef();
   const ctaRef = useRef();
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Hero entrance
-      gsap.fromTo('.hero-badge', { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
-      gsap.fromTo('.hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: 'power3.out' });
-      gsap.fromTo('.hero-sub', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' });
-      gsap.fromTo('.hero-btns', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.6, ease: 'power3.out' });
+      // Hero
+      gsap.fromTo('.hero-badge', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' });
+      gsap.fromTo('.hero-title', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out' });
+      gsap.fromTo('.hero-sub', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, delay: 0.4, ease: 'power3.out' });
+      gsap.fromTo('.hero-btn', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.6, ease: 'power3.out' });
 
-      // Stats counter animation
-      gsap.fromTo('.stat-card',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, stagger: 0.12, duration: 0.7, ease: 'power3.out',
-          scrollTrigger: { trigger: statsRef.current, start: 'top 80%' },
-        }
+      // Stats
+      gsap.fromTo('.stat-item',
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, stagger: 0.1, duration: 0.8, scrollTrigger: { trigger: statsRef.current, start: 'top 85%' } }
       );
 
-      // Module cards
-      gsap.fromTo('.module-card',
-        { opacity: 0, y: 30, scale: 0.95 },
-        {
-          opacity: 1, y: 0, scale: 1, stagger: 0.07, duration: 0.5, ease: 'power3.out',
-          scrollTrigger: { trigger: modulesRef.current, start: 'top 75%' },
-        }
+      // VS Section
+      gsap.fromTo('.vs-box',
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, stagger: 0.2, duration: 0.8, scrollTrigger: { trigger: vsRef.current, start: 'top 80%' } }
+      );
+
+      // Deep Dive Alternating
+      gsap.utils.toArray('.deep-dive-row').forEach((row, i) => {
+        gsap.fromTo(row,
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: row, start: 'top 80%' } }
+        );
+      });
+
+      // Grid
+      gsap.fromTo('.grid-card',
+        { opacity: 0, scale: 0.95 },
+        { opacity: 1, scale: 1, stagger: 0.05, duration: 0.5, scrollTrigger: { trigger: gridRef.current, start: 'top 75%' } }
       );
 
       // CTA
-      gsap.fromTo('.cta-section',
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-          scrollTrigger: { trigger: ctaRef.current, start: 'top 80%' },
-        }
+      gsap.fromTo('.cta-content',
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: ctaRef.current, start: 'top 80%' } }
       );
-    }, heroRef);
-
+    });
     return () => ctx.revert();
   }, []);
 
   return (
-    <Box ref={heroRef} sx={{ bgcolor: BRAND.navy, minHeight: '100vh', overflowX: 'hidden' }}>
-      {/* Navbar */}
+    <Box sx={{ bgcolor: BRAND.navy, minHeight: '100vh', overflowX: 'hidden' }}>
+      {/* ─── Navbar ─── */}
       <Box sx={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1100,
-        display: 'flex', alignItems: 'center', px: { xs: 2, md: 6 }, py: 2,
-        backdropFilter: 'blur(16px)',
-        borderBottom: `1px solid ${alpha(BRAND.border, 0.5)}`,
-        bgcolor: alpha(BRAND.navy, 0.85),
+        display: 'flex', alignItems: 'center', px: { xs: 3, md: 8 }, py: 2,
+        bgcolor: '#041734',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
       }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box sx={{
-            width: 32, height: 32, borderRadius: 1.5,
-            background: `linear-gradient(135deg, ${BRAND.amber}, ${BRAND.amberDark})`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <Construction sx={{ color: '#000', fontSize: 18 }} />
-          </Box>
-          <Typography sx={{ fontWeight: 800, fontSize: '1.1rem', color: BRAND.textPrimary }}>
-            SiteSync
+          <img src="/logo.png" alt="Sitesco Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+          <Typography sx={{ fontWeight: 800, fontSize: '1.3rem', color: BRAND.textPrimary }}>
+            Sitesco
           </Typography>
         </Box>
         <Box sx={{ flex: 1 }} />
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => navigate('/login')}
-          sx={{ mr: 1, borderColor: alpha(BRAND.amber, 0.4), color: BRAND.amber }}
-        >
-          Sign In
+        <Button variant="text" sx={{ color: BRAND.textSecondary, mr: 2, display: { xs: 'none', md: 'block' } }}>Features</Button>
+        <Button variant="text" sx={{ color: BRAND.textSecondary, mr: 3, display: { xs: 'none', md: 'block' } }}>Pricing</Button>
+        <Button variant="outlined" size="small" onClick={() => navigate('/login')} sx={{ mr: 2, color: BRAND.amber }}>
+          Log In
         </Button>
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => navigate('/login')}
-        >
+        <Button variant="contained" size="small" onClick={() => navigate('/login')} sx={{ px: 3 }}>
           Get Started
         </Button>
       </Box>
 
-      {/* Hero Section */}
-      <Box sx={{
-        minHeight: '100vh', display: 'flex', alignItems: 'center',
-        pt: { xs: 8, md: 10 },
-        px: { xs: 2, md: 6, lg: 10 },
-        position: 'relative', overflow: 'hidden',
+      {/* ─── Section 1: The Hero ─── */}
+      <Box ref={heroRef} sx={{
+        position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center',
+        px: { xs: 3, md: 8 }, pt: 10,
+        backgroundImage: 'url(/hero-bg.png)', backgroundSize: 'cover', backgroundPosition: 'center',
       }}>
-        {/* Background gradient */}
-        <Box sx={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: `radial-gradient(ellipse 80% 60% at 70% 50%, ${alpha(BRAND.amber, 0.06)} 0%, transparent 70%),
-                       radial-gradient(ellipse 50% 50% at 20% 80%, ${alpha(BRAND.sky, 0.05)} 0%, transparent 60%)`,
-        }} />
+        <Box sx={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, ${alpha('#0A192F', 0.95)} 0%, ${alpha('#0A192F', 0.6)} 100%)` }} />
 
-        <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} lg={6}>
-            <Chip
-              className="hero-badge"
-              label="Built for India · Middle East · Africa"
-              size="small"
-              sx={{
-                mb: 3, bgcolor: alpha(BRAND.amber, 0.1), color: BRAND.amber,
-                border: `1px solid ${alpha(BRAND.amber, 0.3)}`, fontWeight: 600,
-                fontSize: '0.75rem',
-              }}
-            />
-            <Typography
-              className="hero-title"
-              variant="h1"
-              sx={{
-                fontSize: { xs: '2.4rem', md: '3.4rem', lg: '4rem' },
-                fontWeight: 900,
-                lineHeight: 1.08,
-                mb: 2.5,
-                background: `linear-gradient(135deg, ${BRAND.textPrimary} 0%, ${alpha(BRAND.textPrimary, 0.7)} 100%)`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Construction<br />
-              <Box component="span" sx={{
-                background: `linear-gradient(135deg, ${BRAND.amber}, ${BRAND.amberDark})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>
-                Intelligence
-              </Box>{' '}Platform
-            </Typography>
+        <Box sx={{ position: 'relative', zIndex: 2, maxWidth: 800 }}>
+          <Chip className="hero-badge" label="Built for Scale · Premium Construction OS"
+            sx={{ bgcolor: alpha(BRAND.sky, 0.15), color: BRAND.sky, fontWeight: 700, mb: 4, border: `1px solid ${alpha(BRAND.sky, 0.4)}` }} />
 
-            <Typography
-              className="hero-sub"
-              sx={{
-                fontSize: { xs: '1rem', md: '1.15rem' },
-                color: BRAND.textSecondary,
-                lineHeight: 1.7,
-                mb: 4,
-                maxWidth: 520,
-              }}
-            >
-              Real-time dashboard, labour & material tracking, AI risk engine, 
-              client reports — 10 modules in one platform at ₹15,000 (one-time). 
-              Procore costs ₹8 lakh/year. SiteSync doesn't.
-            </Typography>
-
-            <Box className="hero-btns" sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-              <Button
-                variant="contained"
-                size="large"
-                endIcon={<ArrowForward />}
-                onClick={() => navigate('/login')}
-                sx={{ px: 3.5, py: 1.5, fontSize: '1rem' }}
-              >
-                Launch Demo
-              </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{ px: 3.5, py: 1.5, fontSize: '1rem', borderColor: alpha(BRAND.textMuted, 0.3), color: BRAND.textSecondary }}
-              >
-                View Modules
-              </Button>
-            </Box>
-
-            {/* Trust badges */}
-            <Box sx={{ display: 'flex', gap: 2, mt: 4, flexWrap: 'wrap' }}>
-              {['Real-time WebSockets', 'GPS Verified', 'OCR Scanning', 'AI Risk Score'].map(b => (
-                <Box key={b} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                  <CheckCircle sx={{ fontSize: 14, color: BRAND.green }} />
-                  <Typography sx={{ fontSize: '0.75rem', color: BRAND.textMuted }}>{b}</Typography>
-                </Box>
-              ))}
-            </Box>
-          </Grid>
-
-          {/* Three.js Globe */}
-          <Grid item xs={12} lg={6}>
-            <Box sx={{
-              height: { xs: 320, md: 480 },
-              position: 'relative',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <ThreeGlobe />
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-
-      {/* Stats */}
-      <Box ref={statsRef} sx={{ px: { xs: 2, md: 6, lg: 10 }, py: 8 }}>
-        <Grid container spacing={3}>
-          {STATS.map((s, i) => (
-            <Grid item xs={6} md={3} key={i}>
-              <Box
-                className="stat-card"
-                sx={{
-                  p: 3, borderRadius: 3, textAlign: 'center',
-                  border: `1px solid ${alpha(BRAND.amber, 0.2)}`,
-                  background: alpha(BRAND.amber, 0.04),
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                <Typography sx={{
-                  fontSize: '2.2rem', fontWeight: 900,
-                  background: `linear-gradient(135deg, ${BRAND.amber}, ${BRAND.amberLight})`,
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                }}>
-                  {s.value}
-                </Typography>
-                <Typography sx={{ fontSize: '0.82rem', color: BRAND.textSecondary, mt: 0.5 }}>
-                  {s.label}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-
-      {/* Modules Grid */}
-      <Box ref={modulesRef} sx={{ px: { xs: 2, md: 6, lg: 10 }, py: 8 }}>
-        <Box sx={{ textAlign: 'center', mb: 6 }}>
-          <Chip label="10 Modules" size="small" sx={{ mb: 2, bgcolor: alpha(BRAND.sky, 0.1), color: BRAND.sky, border: `1px solid ${alpha(BRAND.sky, 0.3)}` }} />
-          <Typography variant="h2" sx={{ fontSize: { xs: '1.8rem', md: '2.5rem' }, mb: 2 }}>
-            Every problem. One platform.
+          <Typography className="hero-title" variant="h1" sx={{
+            color: '#ffffff', fontSize: { xs: '3rem', md: '4.5rem' }, fontWeight: 900, lineHeight: 1.1, mb: 3
+          }}>
+            Manage multi-crore sites without leaving your desk.
           </Typography>
-          <Typography sx={{ color: BRAND.textSecondary, maxWidth: 560, mx: 'auto', lineHeight: 1.7 }}>
-            From daily site attendance to investor-ready reports — built by someone who understands Indian construction.
+
+          <Typography className="hero-sub" sx={{ color: alpha('#fff', 0.7), fontSize: '1.2rem', lineHeight: 1.6, mb: 5, maxWidth: 600 }}>
+            Sitesco is the luxury 10-module construction intelligence suite.
+            Stop bleeding margin to ghost workers, untracked material, and delayed milestones.
           </Typography>
+
+          <Box className="hero-btn" sx={{ display: 'flex', gap: 3 }}>
+            <Button variant="contained" size="large" onClick={() => navigate('/login')} endIcon={<ArrowForward />}
+              sx={{ px: 4, py: 2, fontSize: '1.1rem', bgcolor: BRAND.sky, '&:hover': { bgcolor: BRAND.skyDark } }}>
+              Start Building Let's Go
+            </Button>
+          </Box>
         </Box>
-
-        <Grid container spacing={2.5}>
-          {MODULES.map((m) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={m.num}>
-              <Box
-                className="module-card"
-                sx={{
-                  p: 2.5, borderRadius: 2.5, height: '100%',
-                  border: `1px solid ${BRAND.border}`,
-                  bgcolor: BRAND.surface,
-                  cursor: 'pointer',
-                  transition: 'all 0.25s ease',
-                  '&:hover': {
-                    border: `1px solid ${alpha(m.color, 0.4)}`,
-                    bgcolor: alpha(m.color, 0.04),
-                    transform: 'translateY(-3px)',
-                    boxShadow: `0 12px 40px ${alpha(m.color, 0.15)}`,
-                  },
-                }}
-                onClick={() => navigate('/login')}
-              >
-                <Box sx={{
-                  width: 36, height: 36, borderRadius: 1.5, mb: 2,
-                  bgcolor: alpha(m.color, 0.12),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  <Typography sx={{ fontWeight: 800, fontSize: '0.7rem', color: m.color }}>
-                    {m.num}
-                  </Typography>
-                </Box>
-                <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', mb: 0.75, color: BRAND.textPrimary }}>
-                  {m.name}
-                </Typography>
-                <Typography sx={{ fontSize: '0.78rem', color: BRAND.textSecondary, lineHeight: 1.6 }}>
-                  {m.desc}
-                </Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
       </Box>
 
-      {/* CTA */}
-      <Box ref={ctaRef} sx={{ px: { xs: 2, md: 6, lg: 10 }, py: 10 }}>
-        <Box
-          className="cta-section"
-          sx={{
-            borderRadius: 4, p: { xs: 4, md: 8 }, textAlign: 'center',
-            background: `radial-gradient(ellipse at center, ${alpha(BRAND.amber, 0.12)} 0%, ${alpha(BRAND.amber, 0.03)} 70%)`,
-            border: `1px solid ${alpha(BRAND.amber, 0.2)}`,
-            position: 'relative', overflow: 'hidden',
-          }}
-        >
-          <Typography variant="h2" sx={{ fontSize: { xs: '1.8rem', md: '2.8rem' }, mb: 2 }}>
-            ₹15,000 · All 10 Modules · Lifetime Licence
+      {/* ─── Section 2: Social Proof / Metrics ─── */}
+      <Box ref={statsRef} sx={{ bgcolor: BRAND.surface, py: 8, borderBottom: `1px solid ${BRAND.border}` }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={4} justifyContent="center">
+            {STATS.map((s, i) => (
+              <Grid item xs={6} md={3} key={i} className="stat-item">
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: BRAND.amber }}>{s.value}</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: BRAND.textSecondary, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{s.label}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* ─── Section 3: Problem vs Solution ─── */}
+      <Box ref={vsRef} sx={{ py: 12, bgcolor: BRAND.surface2 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', mb: 8 }}>
+            <Typography variant="h2" sx={{ fontSize: '2.5rem', mb: 2 }}>Why contractors switch to Sitesco</Typography>
+            <Typography sx={{ color: BRAND.textSecondary, fontSize: '1.1rem' }}>You don't need an ₹8L/year enterprise tool designed for America.</Typography>
+          </Box>
+          <Grid container spacing={6}>
+            <Grid item xs={12} md={6}>
+              <Box className="vs-box" sx={{ p: 5, bgcolor: BRAND.surface, borderRadius: 4, border: `1px solid ${BRAND.border}`, height: '100%', position: 'relative', overflow: 'hidden' }}>
+                <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, bgcolor: BRAND.textMuted }} />
+                <Typography sx={{ fontSize: '1.4rem', fontWeight: 800, mb: 1, color: BRAND.textSecondary }}>The Old Way (Procore)</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Typography sx={{ fontSize: '3rem', fontWeight: 900, color: BRAND.textPrimary, lineHeight: 1 }}>₹8 Lakh</Typography>
+                  <Typography sx={{ color: BRAND.textSecondary, fontWeight: 600, lineHeight: 1 }}>/year<br />minimum</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {['Per-user licensing fees', 'Extremely complex for on-site staff', 'No local Indian compliance standards', 'No real-time WebSocket dashboard'].map(t => (
+                    <Box key={t} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <Speed sx={{ color: BRAND.textMuted }} />
+                      <Typography sx={{ color: BRAND.textSecondary, fontWeight: 500 }}>{t}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box className="vs-box" sx={{ p: 5, bgcolor: BRAND.surface, borderRadius: 4, border: `2px solid ${BRAND.sky}`, height: '100%', position: 'relative', overflow: 'hidden', boxShadow: `0 20px 40px ${alpha(BRAND.sky, 0.1)}` }}>
+                <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, bgcolor: BRAND.sky }} />
+                <Typography sx={{ fontSize: '1.4rem', fontWeight: 800, mb: 1, color: BRAND.amber }}>The Sitesco Way</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Typography sx={{ fontSize: '3rem', fontWeight: 900, color: BRAND.sky, lineHeight: 1 }}>₹15,000</Typography>
+                  <Typography sx={{ color: BRAND.textPrimary, fontWeight: 700, lineHeight: 1 }}>/One-Time<br />Lifetime Setup</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {['Unlimited users & unlimited projects', '10 exact modules Indian contractors need', 'Geo-fenced attendance & OCR material logging', 'Millisecond latency real-time tracking'].map(t => (
+                    <Box key={t} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                      <CheckCircle sx={{ color: BRAND.sky }} />
+                      <Typography sx={{ color: BRAND.textPrimary, fontWeight: 600 }}>{t}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* ─── Section 4: Deep Dive Features ─── */}
+      <Box ref={deepDiveRef} sx={{ py: 12, bgcolor: BRAND.surface }}>
+        <Container maxWidth="lg">
+
+          {/* Feature 1 */}
+          <Grid container spacing={8} alignItems="center" className="deep-dive-row" sx={{ mb: 12 }}>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ 
+                height: 400, borderRadius: 4, bgcolor: BRAND.surface2, border: `1px solid ${BRAND.border}`, 
+                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative',
+                boxShadow: `0 24px 48px ${alpha('#000', 0.1)}`
+              }}>
+                <img src="/dashboard-mockup.png" alt="Dashboard Mockup" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ width: 60, height: 60, borderRadius: 3, bgcolor: alpha(BRAND.amber, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                <Speed sx={{ fontSize: 32, color: BRAND.amber }} />
+              </Box>
+              <Typography variant="h2" sx={{ fontSize: '2.5rem', mb: 2 }}>Live Command Dashboard</Typography>
+              <Typography sx={{ fontSize: '1.1rem', color: BRAND.textSecondary, lineHeight: 1.7, mb: 3 }}>
+                Know exactly what is happening on site without calling your managers. Watch labour counts, live budget burning, and material stocks update in milliseconds via WebSockets.
+              </Typography>
+              <Button color="primary" sx={{ fontWeight: 700 }} endIcon={<ArrowForward />}>Explore Dashboard</Button>
+            </Grid>
+          </Grid>
+
+          {/* Feature 2 */}
+          <Grid container spacing={8} alignItems="center" className="deep-dive-row" sx={{ mb: 12, flexDirection: { xs: 'column-reverse', md: 'row' } }}>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ width: 60, height: 60, borderRadius: 3, bgcolor: alpha(BRAND.sky, 0.1), display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3 }}>
+                <People sx={{ fontSize: 32, color: BRAND.sky }} />
+              </Box>
+              <Typography variant="h2" sx={{ fontSize: '2.5rem', mb: 2 }}>Geo-Fenced Labour Tracking</Typography>
+              <Typography sx={{ fontSize: '1.1rem', color: BRAND.textSecondary, lineHeight: 1.7, mb: 3 }}>
+                Eliminate ghost workers and attendance fraud instantly. The system enforces strict GPS constraints before a worker is marked present, automatically linking it to your daily expense ledger.
+              </Typography>
+              <Button color="secondary" sx={{ fontWeight: 700 }} endIcon={<ArrowForward />}>Learn About Labour</Button>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ 
+                height: 400, borderRadius: 4, bgcolor: BRAND.surface2, border: `1px solid ${BRAND.border}`, 
+                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative',
+                boxShadow: `0 24px 48px ${alpha('#000', 0.1)}`
+              }}>
+                <img src="/blueprint-bg.png" alt="Map Geo-Fence Mockup" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: BRAND.surface, p: 2, borderRadius: 2, boxShadow: `0 4px 12px ${alpha(BRAND.sky, 0.3)}` }}>
+                   <CheckCircle sx={{ color: BRAND.green, fontSize: 32, display: 'block', mx: 'auto', mb: 1 }} />
+                   <Typography sx={{ fontWeight: 700, textAlign: 'center' }}>Worker inside Geo-Fence</Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+
+        </Container>
+      </Box>
+
+      {/* ─── Section 5: The 10 Modules App Grid ─── */}
+      <Box ref={gridRef} sx={{ py: 12, bgcolor: BRAND.surface2, borderTop: `1px solid ${BRAND.border}` }}>
+        <Container maxWidth="xl">
+          <Box sx={{ textAlign: 'center', mb: 10, maxWidth: 600, mx: 'auto' }}>
+            <Typography variant="h2" sx={{ fontSize: '2.5rem', mb: 2 }}>Every problem. One platform.</Typography>
+            <Typography sx={{ color: BRAND.textSecondary, fontSize: '1.1rem' }}>Built exclusively for high-scale construction management.</Typography>
+          </Box>
+          <Grid container spacing={3}>
+            {MODULES.map(m => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={m.num}>
+                <Box className="grid-card" sx={{
+                  p: 4, bgcolor: BRAND.surface, borderRadius: 3, border: `1px solid ${BRAND.border}`, height: '100%',
+                  transition: 'all 0.3s ease', cursor: 'pointer',
+                  '&:hover': { transform: 'translateY(-4px)', boxShadow: `0 12px 24px rgba(0,0,0,0.06)`, borderColor: m.color }
+                }}>
+                  <Typography sx={{ fontSize: '2rem', fontWeight: 900, color: alpha(m.color, 0.2), mb: 1 }}>{m.num}</Typography>
+                  <Typography sx={{ fontSize: '1.1rem', fontWeight: 800, color: BRAND.textPrimary, mb: 1 }}>{m.name}</Typography>
+                  <Typography sx={{ fontSize: '0.9rem', color: BRAND.textSecondary, lineHeight: 1.6 }}>{m.desc}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* ─── Section 6: Final CTA ─── */}
+      <Box ref={ctaRef} sx={{ py: 12, px: 3, bgcolor: BRAND.navy, display: 'flex', justifyContent: 'center' }}>
+        <Box className="cta-content" sx={{
+          maxWidth: 900, width: '100%', bgcolor: BRAND.amber, borderRadius: 4, p: { xs: 4, md: 8 },
+          textAlign: 'center', position: 'relative', overflow: 'hidden',
+          boxShadow: `0 24px 48px ${alpha(BRAND.amber, 0.4)}`
+        }}>
+          <Typography variant="h2" sx={{ fontSize: { xs: '2rem', md: '3.5rem' }, color: '#ffffff', mb: 3 }}>
+            Ready to control your sites?
           </Typography>
-          <Typography sx={{ color: BRAND.textSecondary, fontSize: '1.05rem', mb: 4, maxWidth: 500, mx: 'auto' }}>
-            One-time payment. No subscriptions. No per-user fees. 
-            Used by contractors managing ₹50L to ₹5Cr projects.
+          <Typography sx={{ fontSize: '1.2rem', color: alpha('#fff', 0.8), mb: 6, maxWidth: 600, mx: 'auto' }}>
+            Book a demo today. Setup takes 10 minutes. Pricing is a flat ₹15,000 for life. Start making more margin on your projects immediately.
           </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            endIcon={<ArrowForward />}
-            onClick={() => navigate('/login')}
-            sx={{ px: 5, py: 1.8, fontSize: '1.05rem' }}
-          >
-            Start Free Demo
+          <Button variant="contained" size="large" onClick={() => navigate('/login')}
+            sx={{ px: 6, py: 2, fontSize: '1.2rem', bgcolor: BRAND.sky, color: '#fff', '&:hover': { bgcolor: BRAND.skyDark } }}>
+            Get Started Now
           </Button>
         </Box>
       </Box>
 
-      {/* Footer */}
-      <Box sx={{ px: { xs: 2, md: 6 }, py: 4, borderTop: `1px solid ${BRAND.border}`, textAlign: 'center' }}>
-        <Typography sx={{ color: BRAND.textMuted, fontSize: '0.82rem' }}>
-          © 2026 SiteSync · Construction Intelligence Platform · India · UAE · Kenya
-        </Typography>
+      {/* ─── Footer ─── */}
+      <Box sx={{ bgcolor: BRAND.surface, py: 6, borderTop: `1px solid ${BRAND.border}` }}>
+        <Container maxWidth="xl" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <img src="/logo.png" alt="Sitesco Logo" style={{ width: 24, height: 24, objectFit: 'contain', filter: 'grayscale(100%)' }} />
+            <Typography sx={{ fontWeight: 800, color: BRAND.textPrimary }}>Sitesco</Typography>
+          </Box>
+          <Typography sx={{ color: BRAND.textMuted, fontSize: '0.85rem' }}>
+            © 2026 Sitesco Software Systems. All rights reserved.
+          </Typography>
+        </Container>
       </Box>
+
     </Box>
   );
 }

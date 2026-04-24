@@ -9,7 +9,7 @@ import {
 import {
   Add, Inventory2, Warning, CheckCircle, TrendingDown,
   DocumentScanner, Download, Info, LocalShipping,
-  ReceiptLong, Analytics,
+  ReceiptLong, Analytics, Delete,
 } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useMaterialStore, useProjectStore } from '../store';
@@ -83,6 +83,10 @@ function AddDeliveryDialog({ open, onClose, projectId }) {
 
 export default function MaterialLog() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useMaterialStore.getState().fetchMaterials(projectId);
+  }, [projectId]);
+
   const { setActiveProject, projects } = useProjectStore();
   const { deliveries, consumption } = useMaterialStore();
   const [addOpen, setAddOpen] = useState(false);
@@ -255,14 +259,20 @@ export default function MaterialLog() {
                     '&:hover': { bgcolor: alpha(BRAND.surface2, 0.5) },
                   }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-                      <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: BRAND.textPrimary }}>{d.material}</Typography>
-                      <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: BRAND.amber }}>
-                        ₹{(d.qty * d.rate).toLocaleString()}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Typography sx={{ fontSize: '0.72rem', color: BRAND.textMuted }}>{d.qty} {d.unit} · {d.supplier}</Typography>
-                      <Typography sx={{ fontSize: '0.72rem', color: BRAND.textMuted }}>{d.challan}</Typography>
+                      <Box>
+                        <Typography sx={{ fontWeight: 600, fontSize: '0.85rem', color: BRAND.textPrimary }}>{d.material}</Typography>
+                        <Typography sx={{ fontSize: '0.72rem', color: BRAND.textMuted }}>{d.qty} {d.unit} · {d.supplier} ({d.challan})</Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography sx={{ fontWeight: 700, fontSize: '0.85rem', color: BRAND.amber }}>
+                          ₹{(d.qty * d.rate).toLocaleString()}
+                        </Typography>
+                        <Tooltip title="Delete Delivery">
+                          <IconButton size="small" onClick={() => useMaterialStore.getState().deleteDelivery(projectId, d.id)} sx={{ color: BRAND.textMuted, '&:hover': { color: BRAND.red } }}>
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </Box>
                   </Box>
                 ))}

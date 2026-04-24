@@ -93,6 +93,10 @@ function AddExpenseDialog({ open, onClose, projectId, budgetItems }) {
 
 export default function BudgetTracker() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useBudgetStore.getState().fetchBudget(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { budgets } = useBudgetStore();
   const [addOpen, setAddOpen] = useState(false);

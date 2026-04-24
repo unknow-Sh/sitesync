@@ -57,6 +57,10 @@ function AddEquipmentDialog({ open, onClose }) {
 
 export default function EquipmentTracker() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useEquipmentStore.getState().fetchEquipment(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { equipment } = useEquipmentStore();
   const [addOpen, setAddOpen] = useState(false);

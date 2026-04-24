@@ -78,6 +78,10 @@ function ClaimRow({ claim, sc, onApprove, onRevise }) {
 
 export default function Subcontractors() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useSubcontractorStore.getState().fetchSubcontractors(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { subcontractors, claims } = useSubcontractorStore();
   const [tab, setTab] = useState(0);

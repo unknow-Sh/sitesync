@@ -123,6 +123,10 @@ function AddWorkerDialog({ open, onClose, projectId }) {
 
 export default function LabourTracker() {
   const { projectId } = useParams();
+  useEffect(() => {
+    if (projectId) useLabourStore.getState().fetchWorkers(projectId);
+  }, [projectId]);
+
   const { projects, setActiveProject } = useProjectStore();
   const { workers, updateWorkerStatus } = useLabourStore();
   const [addOpen, setAddOpen] = useState(false);

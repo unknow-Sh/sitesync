@@ -34,14 +34,22 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const found = MOCK_USERS[email.toLowerCase()];
-    if (!found || found.password !== password) {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.toLowerCase(), password })
+      });
+      if (!res.ok) {
+        throw new Error('Invalid email or password');
+      }
+      const safeUser = await res.json();
+      setUser(safeUser);
+      localStorage.setItem('sitesync_user', JSON.stringify(safeUser));
+      return safeUser;
+    } catch (e) {
       throw new Error('Invalid email or password');
     }
-    const { password: _pw, ...safeUser } = found;
-    setUser(safeUser);
-    localStorage.setItem('sitesync_user', JSON.stringify(safeUser));
-    return safeUser;
   };
 
   const logout = () => {

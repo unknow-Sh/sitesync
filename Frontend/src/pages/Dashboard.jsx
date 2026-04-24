@@ -191,27 +191,47 @@ export default function AllProjectsDashboard() {
   return (
     <DashboardLayout>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="overline" sx={{ fontSize: '0.72rem' }}>
-          Overview
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
-          <Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, mt: 0.5 }}>
-              Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'},{' '}
-              <Box component="span" sx={{ color: BRAND.amber }}>{user?.name?.split(' ')[0]}</Box>
-            </Typography>
-            <Typography sx={{ color: BRAND.textSecondary, mt: 0.5 }}>
-              {projects.length} active projects · {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </Typography>
+      <Box sx={{ 
+        mb: 4, p: 4, borderRadius: 3, position: 'relative', overflow: 'hidden',
+        border: `1px solid ${alpha(BRAND.sky, 0.2)}`,
+        boxShadow: `0 12px 32px ${alpha('#000', 0.5)}`
+      }}>
+        {/* Abstract Background Layer */}
+        <Box sx={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0,
+          backgroundImage: 'url(/blueprint-bg.png)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          opacity: 0.15, mixBlendMode: 'screen'
+        }} />
+        {/* Gradient Overlay for Text Readability */}
+        <Box sx={{
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1,
+          background: `linear-gradient(90deg, ${alpha(BRAND.navy, 0.95)} 0%, ${alpha(BRAND.surface, 0.8)} 100%)`
+        }} />
+
+        <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Typography variant="overline" sx={{ fontSize: '0.75rem', color: BRAND.amberLight }}>
+            Contractor Overview
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+            <Box>
+              <Typography variant="h3" sx={{ fontWeight: 800, mt: 0.5 }}>
+                Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'},{' '}
+                <Box component="span" sx={{ color: BRAND.sky }}>{user?.name?.split(' ')[0]}</Box>
+              </Typography>
+              <Typography sx={{ color: BRAND.textSecondary, mt: 1, fontSize: '1.05rem', fontWeight: 500 }}>
+                {projects.length} active projects pending your review · {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() => navigate('/projects/new')}
+              sx={{ px: 3, py: 1.2 }}
+            >
+              New Project
+            </Button>
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<Add />}
-            onClick={() => navigate('/projects/new')}
-          >
-            New Project
-          </Button>
         </Box>
       </Box>
 
